@@ -24,3 +24,44 @@ fn rocket() -> Rocket {
 fn main() {
     rocket().launch();
 }
+
+#[cfg(test)]
+mod test {
+    use super::rocket;
+    use rocket::http::Status;
+    use rocket::local::Client;
+
+    #[test]
+    fn test_hello() {
+        let client = Client::new(rocket()).unwrap();
+        let mut response = client.get("/").dispatch();
+        assert_eq!(response.status(), Status::Ok);
+        assert_eq!(
+            response.body_string(),
+            Some("Make a GET call with /<mangled_symbol> to return the demangled form\n".into())
+        );
+    }
+
+    #[test]
+    fn test_successful_demangle() {
+        let client = Client::new(rocket()).unwrap();
+        let mut response = client.get("/_ZN6icu_6011StringPieceC1EPKc").dispatch();
+        assert_eq!(response.status(), Status::Ok);
+        assert_eq!(
+            response.body_string(),
+            Some("icu_60::StringPiece::StringPiece(char const*)\n".into())
+        );
+    }
+
+    #[test]
+    fn test_invalid_symbol() {
+        let client = Client::new(rocket()).unwrap();
+        let fake_symbol = "no_way_this_is_a_valid_symbol";
+        let mut response = client.get(format!("/{}", "no_way_this_is_a_valid_symbol")).dispatch();
+        assert_eq!(response.status(), Status::Ok);
+        assert_eq!(
+            response.body_string(),
+            Some(format!("Failed to demangle {}\n", fake_symbol))
+        );
+    }
+}
