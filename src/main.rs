@@ -18,14 +18,14 @@ fn demangle(symbol: &RawStr) -> String {
 }
 
 fn get_config() -> Config {
-    return if cfg!(debug_assertions) {
+    if cfg!(debug_assertions) {
         Config::build(Environment::Development).finalize().unwrap()
     } else {
         Config::build(Environment::Production)
             .port(8082)
             .finalize()
             .unwrap()
-    };
+    }
 }
 
 #[get("/")]

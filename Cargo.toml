@@ -10,4 +10,3 @@ edition = "2018"
 [dependencies]
 rocket = "0.4.2"
 cpp_demangle = "0.2.13"
-mysql = "16.1.0"
