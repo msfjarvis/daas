@@ -8,7 +8,7 @@ use rocket::http::RawStr;
 use std::string::ToString;
 
 #[get("/<symbol>")]
-fn index(symbol: &RawStr) -> String {
+fn demangle(symbol: &RawStr) -> String {
     let sym = match Symbol::new(&symbol[..]) {
         Ok(result) => format!("{}", result),
         Err(_) => format!("Failed to demangle {}", symbol)
@@ -16,6 +16,11 @@ fn index(symbol: &RawStr) -> String {
     format!("{}\n", sym.to_string())
 }
 
+#[get("/")]
+fn index() -> &'static str {
+    "Make a GET call with /<mangled_symbol> to return the demangled form\n"
+}
+
 fn main() {
-    rocket::ignite().mount("/", routes![index]).launch();
+    rocket::ignite().mount("/", routes![index, demangle]).launch();
 }
