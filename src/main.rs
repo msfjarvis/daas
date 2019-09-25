@@ -4,6 +4,7 @@ extern crate rocket;
 extern crate cpp_demangle;
 
 use cpp_demangle::Symbol;
+use rocket::config::{Config, Environment};
 use rocket::http::RawStr;
 use std::string::ToString;
 
@@ -11,9 +12,20 @@ use std::string::ToString;
 fn demangle(symbol: &RawStr) -> String {
     let sym = match Symbol::new(&symbol[..]) {
         Ok(result) => format!("{}", result),
-        Err(_) => format!("Failed to demangle {}", symbol)
+        Err(_) => format!("Failed to demangle {}", symbol),
     };
     format!("{}\n", sym.to_string())
+}
+
+fn get_config() -> Config {
+    return if cfg!(debug_assertions) {
+        Config::build(Environment::Development).finalize().unwrap()
+    } else {
+        Config::build(Environment::Production)
+            .port(8082)
+            .finalize()
+            .unwrap()
+    };
 }
 
 #[get("/")]
@@ -22,5 +34,7 @@ fn index() -> &'static str {
 }
 
 fn main() {
-    rocket::ignite().mount("/", routes![index, demangle]).launch();
+    rocket::custom(get_config())
+        .mount("/", routes![index, demangle])
+        .launch();
 }
