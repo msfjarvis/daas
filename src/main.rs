@@ -9,7 +9,10 @@ use std::string::ToString;
 
 #[get("/<symbol>")]
 fn index(symbol: &RawStr) -> String {
-    let sym = Symbol::new(&symbol[..]).expect("Could not parse mangled symbol!");
+    let sym = match Symbol::new(&symbol[..]) {
+        Ok(result) => format!("{}", result),
+        Err(_) => format!("Failed to demangle {}", symbol)
+    };
     format!("{}\n", sym.to_string())
 }
 
