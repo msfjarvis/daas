@@ -1,5 +1,3 @@
-extern crate cpp_demangle;
-extern crate rocket;
 use cpp_demangle::Symbol;
 use rocket::http::RawStr;
 

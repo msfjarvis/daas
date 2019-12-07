@@ -1,6 +1,7 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 #[macro_use]
 extern crate rocket;
+extern crate cpp_demangle;
 
 mod routes;
 use rocket::config::{Config, Environment};
@@ -57,7 +58,9 @@ mod test {
     fn test_invalid_symbol() {
         let client = Client::new(rocket()).unwrap();
         let fake_symbol = "no_way_this_is_a_valid_symbol";
-        let mut response = client.get(format!("/{}", "no_way_this_is_a_valid_symbol")).dispatch();
+        let mut response = client
+            .get(format!("/{}", "no_way_this_is_a_valid_symbol"))
+            .dispatch();
         assert_eq!(response.status(), Status::Ok);
         assert_eq!(
             response.body_string(),
