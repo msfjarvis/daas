@@ -19,7 +19,7 @@ fn get_config() -> Config {
 }
 
 fn rocket() -> Rocket {
-    rocket::custom(get_config()).mount("/", routes![routes::index, routes::demangle])
+    rocket::custom(get_config()).mount("/", routes![routes::index, routes::demangle, routes::demangle_as_json])
 }
 
 fn main() {
@@ -51,6 +51,17 @@ mod test {
         assert_eq!(
             response.body_string(),
             Some("icu_60::StringPiece::StringPiece(char const*)\n".into())
+        );
+    }
+
+    #[test]
+    fn test_successful_demangle_as_json() {
+        let client = Client::new(rocket()).unwrap();
+        let mut response = client.get("/_ZN6icu_6011StringPieceC1EPKc/json").dispatch();
+        assert_eq!(response.status(), Status::Ok);
+        assert_eq!(
+            response.body_string(),
+            Some("{\"symbol\": \"_ZN6icu_6011StringPieceC1EPKc\", \"result\": \"icu_60::StringPiece::StringPiece(char const*)\"}\n".into())
         );
     }
 
