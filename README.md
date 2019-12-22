@@ -9,4 +9,9 @@ $ curl -s https://daas.msfjarvis.dev/
 Make a GET call with /<mangled_symbol> to return the demangled form
 $ curl -s https://daas.msfjarvis.dev/_ZN6icu_6011StringPieceC1EPKc
 icu_60::StringPiece::StringPiece(char const*)
+$ curl -s https://daas.msfjarvis.dev/_ZN6icu_6011StringPieceC1EPKc/json | jq .
+{
+  "symbol": "_ZN6icu_6011StringPieceC1EPKc",
+  "result": "icu_60::StringPiece::StringPiece(char const*)"
+}
 ```
