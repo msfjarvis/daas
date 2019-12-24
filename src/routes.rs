@@ -1,15 +1,13 @@
 use cpp_demangle::Symbol;
 use rocket::http::RawStr;
 
-use std::string::ToString;
-
 #[get("/<symbol>")]
 pub fn demangle(symbol: &RawStr) -> String {
     let sym = match Symbol::new(&symbol[..]) {
         Ok(result) => format!("{}", result),
         Err(_) => format!("Failed to demangle {}", symbol),
     };
-    format!("{}\n", sym.to_string())
+    format!("{}\n", sym)
 }
 
 #[get("/<symbol>/json")]
@@ -18,11 +16,7 @@ pub fn demangle_as_json(symbol: &RawStr) -> String {
         Ok(result) => format!("{}", result),
         Err(_) => format!("Failed to demangle {}", symbol),
     };
-    format!(
-        "{{\"symbol\": \"{}\", \"result\": \"{}\"}}\n",
-        symbol,
-        sym.to_string()
-    )
+    format!("{{\"symbol\": \"{}\", \"result\": \"{}\"}}\n", symbol, sym)
 }
 
 #[get("/")]
