@@ -1,7 +1,8 @@
-#![feature(proc_macro_hygiene, decl_macro)]
+#![feature(proc_macro_hygiene, decl_macro, test)]
 #[macro_use]
 extern crate rocket;
 extern crate cpp_demangle;
+extern crate test;
 
 mod routes;
 use rocket::config::{Config, Environment};
@@ -30,10 +31,11 @@ fn main() {
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use super::rocket;
     use rocket::http::Status;
     use rocket::local::Client;
+    use test::Bencher;
 
     #[test]
     fn test_hello() {
@@ -80,5 +82,21 @@ mod test {
             response.body_string(),
             Some(format!("Failed to demangle {}\n", fake_symbol))
         );
+    }
+
+    #[bench]
+    fn bench_demangle(b: &mut Bencher) {
+        let client = Client::new(rocket()).unwrap();
+        b.iter(|| {
+            assert_eq!(client.get("/_ZN6icu_6011StringPieceC1EPKc").dispatch().status(), Status::Ok);
+        });
+    }
+
+    #[bench]
+    fn bench_demangle_json(b: &mut Bencher) {
+        let client = Client::new(rocket()).unwrap();
+        b.iter(|| {
+            assert_eq!(client.get("/_ZN6icu_6011StringPieceC1EPKc/json").dispatch().status(), Status::Ok);
+        });
     }
 }
