@@ -19,7 +19,10 @@ fn get_config() -> Config {
 }
 
 fn rocket() -> Rocket {
-    rocket::custom(get_config()).mount("/", routes![routes::index, routes::demangle, routes::demangle_as_json])
+    rocket::custom(get_config()).mount(
+        "/",
+        routes![routes::index, routes::demangle, routes::demangle_as_json],
+    )
 }
 
 fn main() {

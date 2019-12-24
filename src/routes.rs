@@ -18,7 +18,11 @@ pub fn demangle_as_json(symbol: &RawStr) -> String {
         Ok(result) => format!("{}", result),
         Err(_) => format!("Failed to demangle {}", symbol),
     };
-    format!("{{\"symbol\": \"{}\", \"result\": \"{}\"}}\n", symbol, sym.to_string())
+    format!(
+        "{{\"symbol\": \"{}\", \"result\": \"{}\"}}\n",
+        symbol,
+        sym.to_string()
+    )
 }
 
 #[get("/")]
