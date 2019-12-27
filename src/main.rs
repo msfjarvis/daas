@@ -88,7 +88,13 @@ mod tests {
     fn bench_demangle(b: &mut Bencher) {
         let client = Client::new(rocket()).unwrap();
         b.iter(|| {
-            assert_eq!(client.get("/_ZN6icu_6011StringPieceC1EPKc").dispatch().status(), Status::Ok);
+            assert_eq!(
+                client
+                    .get("/_ZN6icu_6011StringPieceC1EPKc")
+                    .dispatch()
+                    .status(),
+                Status::Ok
+            );
         });
     }
 
@@ -96,7 +102,13 @@ mod tests {
     fn bench_demangle_json(b: &mut Bencher) {
         let client = Client::new(rocket()).unwrap();
         b.iter(|| {
-            assert_eq!(client.get("/_ZN6icu_6011StringPieceC1EPKc/json").dispatch().status(), Status::Ok);
+            assert_eq!(
+                client
+                    .get("/_ZN6icu_6011StringPieceC1EPKc/json")
+                    .dispatch()
+                    .status(),
+                Status::Ok
+            );
         });
     }
 }
