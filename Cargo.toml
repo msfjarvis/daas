@@ -9,4 +9,4 @@ edition = "2018"
 
 [dependencies]
 rocket = "0.4.5"
-cpp_demangle = "0.2.17"
+cpp_demangle = "0.3.0"
